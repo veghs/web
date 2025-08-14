@@ -1,92 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>vegh's</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vulcan Bot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #292942;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+    section {
+      padding: 2rem;
+      border-bottom: 1px solid #333;
+    }
+    h2 {
+      color: #ffcc00;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      font-size: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #292942;
+      font-size: 0.9rem;
+    }
+    .highlight {
+      color: #00ffcc;
+    }
+  </style>
 </head>
 <body>
-  <div class="main-content">
-    <div class="header-section">
-      <div class="container">
-          <h1>vegh's</h1>
-          <p id="editable-text">Join our Discord!</p>
-          <button onclick="changeText()">Show Link</button>
-          <a href="https://discord.gg/GUerNAUKu2" target="_blank">
-              <button>Join Discord</button>
-          </a>
-      </div>
-      <div class="text-box">
-        <p>
-            vegh's world changing project.<br><br>
-            We offer tools<br>
-            that will make life easier.<br><br>
-            Starting off with our discord app,<br>
-            that has many fun commands, and<br>
-            is open to public! You can add the app<br>
-            to your discord server here: <a href="https://discord.com/oauth2/authorize?client_id=1391087051150983298" target="_blank">Add Discord App</a><br>
-            or by the click of a button on this website!<br><br>
-        </p>
-      </div>
-    </div>
+  <header>
+    <h1>⚔️ Vulcan Bot</h1>
+    <p>Loot economy • Roleplay • Tickets • Voice generators • Badges • Fun</p>
+  </header>
 
-    <div class="button-section">
-      <div class="container grey-box">
-          <a href="https://discord.com/oauth2/authorize?client_id=1391087051150983298" target="_blank">
-              <button>Add Discord Bot</button>
-          </a>
-      </div>
-    </div>
+  <section>
+    <h2>🎮 Core Features</h2>
+    <ul>
+      <li><span class="highlight">/join</span> – Register in the game</li>
+      <li><span class="highlight">/claim</span> – Earn coins and items every 5 minutes</li>
+      <li><span class="highlight">/coinflip</span> – Bet coins on heads or tails</li>
+      <li><span class="highlight">/profile</span> – View your coins, badges, and inventory</li>
+      <li><span class="highlight">/sell</span> & <span class="highlight">/sellall</span> – Convert items to coins</li>
+      <li><span class="highlight">/mix</span> – Combine items to create rare loot</li>
+      <li><span class="highlight">/hunt</span> – Explore locations for daily rewards</li>
+      <li><span class="highlight">/baltop</span> – See the richest players</li>
+      <li><span class="highlight">dap @user</span> – Send a dap and earn badges</li>
+    </ul>
+  </section>
 
-    <div class="footer-section">
-      <div class="text-box">
-        <h2>Terms of Service</h2>
-        <p>
-            1. Acceptance of Terms<br>
-            By using the bot, you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the bot.<br><br>
+  <section>
+    <h2>🏅 Badges</h2>
+    <ul>
+      <li class="badge">🏆 Best Buds – Dapped someone 10 times</li>
+      <li class="badge">🎯 Coin Master – Flipped 10 coins</li>
+      <li class="badge">💰 Coin Collector – Claimed 10 coins</li>
+      <li class="badge">🎒 Inventory Hoarder – Own 20+ items</li>
+      <li class="badge">📅 Daily Devotee – Claimed 7 days in a row</li>
+      <li class="badge">🍀 Lucky Streak – Won 5 coinflips in a row</li>
+      <li class="badge">🧪 Mixer – Successfully mixed items</li>
+      <li class="badge">🏅 Badge Collector – Earned all other badges</li>
+    </ul>
+  </section>
 
-            2. Use of the Bot<br>
-            The bot is provided "as is" and "as available".<br>
-            You agree to use the bot in compliance with all applicable laws and regulations.<br>
-            You will not use the bot for any illegal or unauthorized purpose.<br><br>
+  <section>
+    <h2>🛒 Item Economy</h2>
+    <p>Collect items like:</p>
+    <ul>
+      <li>🧸 Plushie</li>
+      <li>🧃 Juice Box</li>
+      <li>📜 Mysterious Scroll</li>
+      <li>🧪 Vibe Serum</li>
+      <li>🪙 Rusty Coin</li>
+    </ul>
+    <p>Mix them to create rare loot like:</p>
+    <ul>
+      <li>💥 Energy Elixir</li>
+      <li>🔮 Mirror of Secrets</li>
+      <li>🧃 Salty Juice</li>
+      <li>🧸 Lucky Plushie</li>
+    </ul>
+  </section>
 
-            3. User Responsibilities<br>
-            You are responsible for any content you send through the bot.<br>
-            You must not engage in any activity that disrupts or interferes with the bot.<br><br>
+  <section>
+    <h2>📢 Admin Tools</h2>
+    <ul>
+      <li><span class="highlight">/setup_verify</span> – Create verification buttons</li>
+      <li><span class="highlight">/setup_ticket</span> – Add ticket buttons</li>
+      <li><span class="highlight">/setup_voicegen</span> – Create voice generator channels</li>
+      <li><span class="highlight">/setup_announce</span> – Toggle event announcement channels</li>
+      <li><span class="highlight">/event</span> – Start loot frenzy events</li>
+      <li><span class="highlight">/stopallevent</span> – End all active events</li>
+    </ul>
+  </section>
 
-            4. Modifications to Terms<br>
-            We reserve the right to modify these terms at any time. Changes will be posted, and your continued use of the bot constitutes acceptance of the new terms.<br><br>
+  <section>
+    <h2>🎉 Events & Social</h2>
+    <p>Trigger timed events that boost item drops and coin rewards. Use <span class="highlight">dap</span> to interact socially and earn badges. Special users can react to messages and bypass cooldowns.</p>
+  </section>
 
-            5. Termination<br>
-            We reserve the right to terminate your access to the bot at any time, without notice, for conduct that we believe violates these terms or is harmful to other users.
-        </p>
-      </div>
-
-      <div class="text-box">
-        <h2>Privacy Policy</h2>
-        <p>
-            1. Information Collection<br>
-            The bot may collect certain information from you, including but not limited to your username and messages you send.<br>
-            We do not collect personal information such as your real name, address, or payment details.<br><br>
-
-            2. Use of Information<br>
-            Information collected by the bot is used to provide and improve the bot's services.<br>
-            We do not share your information with third parties except as required by law.<br><br>
-
-            3. Data Security<br>
-            We take reasonable measures to protect the information collected by the bot from loss, theft, misuse, and unauthorized access.<br><br>
-
-            4. Changes to Privacy Policy<br>
-            We may update this Privacy Policy from time to time. Any changes will be posted, and your continued use of the bot constitutes acceptance of the new policy.<br><br>
-
-            5. Contact Us<br>
-            If you have any questions or concerns about these terms or the privacy policy, please contact us at our Discord server.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <footer>
+    Made with ❤️ by László • Vulcan Bot © 2025
+  </footer>
 </body>
-</html>
