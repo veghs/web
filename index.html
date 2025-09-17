@@ -1,156 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vulcan Bot</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quick Notes</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e2f;
-      color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #292942;
-      padding: 2rem;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin: 0;
-    }
-    section {
-      padding: 2rem;
-      border-bottom: 1px solid #333;
-    }
-    h2 {
-      color: #ffcc00;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    .badge {
-      font-size: 1.2rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #292942;
-      font-size: 0.9rem;
-    }
-    .highlight {
-      color: #00ffcc;
-    }
-    .invite-button {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background: linear-gradient(135deg, #5865F2, #4e4ecf);
-      color: white;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .invite-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px #5865F2;
-    }
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    body{margin:0;display:flex;height:100vh}
+    .sidebar{width:320px;border-right:1px solid #e6e6e6;padding:12px;box-sizing:border-box}
+    .main{flex:1;padding:12px;box-sizing:border-box}
+    input,textarea,button{font:inherit}
+    .note-item{padding:8px;border-radius:6px;cursor:pointer;margin-bottom:6px;background:#fafafa;border:1px solid #eee}
+    .note-item.active{background:#e8f0ff}
+    .controls{display:flex;gap:8px;margin-top:8px}
+    .list{height:calc(100vh - 170px);overflow:auto;padding-right:6px}
+    textarea{width:100%;height:60vh;resize:vertical;padding:8px;border-radius:6px;border:1px solid #ddd}
+    .small{font-size:13px;color:#666}
+    .topbar{display:flex;gap:8px;align-items:center}
   </style>
 </head>
 <body>
-  <header>
-    <h1>⚔️ Vulcan Bot</h1>
-    <p>Loot economy • Roleplay • Tickets • Voice generators • Badges • Fun</p>
-    <a href="https://discord.com/oauth2/authorize?client_id=1391087051150983298"
-       target="_blank"
-       class="invite-button">➕ Add Vulcan to Your Server</a>
-  </header>
+  <div class="sidebar">
+    <div class="topbar">
+      <input id="filter" placeholder="Search..." style="flex:1;padding:8px;border-radius:6px;border:1px solid #ddd" />
+      <button id="newBtn">New</button>
+    </div>
+    <div style="margin-top:10px">
+      <button id="exportBtn">Export .json</button>
+      <button id="importBtn">Import</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+    </div>
+    <div class="list" id="notesList"></div>
+    <div class="small" style="margin-top:8px">Notes stored locally (browser). Works offline.</div>
+  </div>
+  <div class="main">
+    <input id="title" placeholder="Title" style="width:100%;padding:10px;border-radius:6px;border:1px solid #ddd;margin-bottom:8px" />
+    <textarea id="content" placeholder="Write your note here..."></textarea>
+    <div class="controls">
+      <button id="saveBtn">Save</button>
+      <button id="copyBtn">Copy</button>
+      <button id="deleteBtn">Delete</button>
+      <button id="clearAllBtn">Clear All</button>
+      <div style="flex:1"></div>
+      <div class="small" id="status"></div>
+    </div>
+  </div>
 
-  <section>
-    <h2>🎮 Core Features</h2>
-    <ul>
-      <li><span class="highlight">/join</span> – Register in the game</li>
-      <li><span class="highlight">/claim</span> – Earn coins and items every 5 minutes</li>
-      <li><span class="highlight">/coinflip</span> – Bet coins on heads or tails</li>
-      <li><span class="highlight">/profile</span> – View your coins, badges, and inventory</li>
-      <li><span class="highlight">/sell</span> & <span class="highlight">/sellall</span> – Convert items to coins</li>
-      <li><span class="highlight">/mix</span> – Combine items to create rare loot</li>
-      <li><span class="highlight">/hunt</span> – Explore locations for daily rewards</li>
-      <li><span class="highlight">/baltop</span> – See the richest players</li>
-      <li><span class="highlight">/spincoin</span> – Spin the wheel for a chance to win coins!</li>
-      <li><span class="highlight">/duel @user</span> – Challenge another user to a coin duel!</li>
-      <li><span class="highlight">/gift @user</span> – Gift an item from your inventroy to another user!</li>
-      <li><span class="highlight">dap @user</span> – Send a dap and earn badges</li>
-    </ul>
-  </section>
+  <script>
+    const KEY = 'quick_notes_v1';
+    let notes = JSON.parse(localStorage.getItem(KEY) || '{}');
+    let currentId = null;
 
-  <section>
-    <h2>🏅 Badges</h2>
-    <ul>
-      <li class="badge">🏆 Best Buds – Dapped someone 10 times</li>
-      <li class="badge">🎯 Coin Master – Flipped 10 coins</li>
-      <li class="badge">💰 Coin Collector – Claimed 10 coins</li>
-      <li class="badge">🎒 Inventory Hoarder – Own 20+ items</li>
-      <li class="badge">📅 Daily Devotee – Claimed 7 days in a row</li>
-      <li class="badge">🍀 Lucky Streak – Won 5 coinflips in a row</li>
-      <li class="badge">🧪 Mixer – Mix two items together</li>
-      <li class="badge">🏅 Duelist – Won 10 duels</li>
-      <li class="badge">🏅 Badge Collector – Earned all other badges</li>
-    </ul>
-  </section>
+    const els = {
+      notesList: document.getElementById('notesList'),
+      title: document.getElementById('title'),
+      content: document.getElementById('content'),
+      saveBtn: document.getElementById('saveBtn'),
+      copyBtn: document.getElementById('copyBtn'),
+      deleteBtn: document.getElementById('deleteBtn'),
+      newBtn: document.getElementById('newBtn'),
+      filter: document.getElementById('filter'),
+      status: document.getElementById('status'),
+      exportBtn: document.getElementById('exportBtn'),
+      importBtn: document.getElementById('importBtn'),
+      importFile: document.getElementById('importFile'),
+      clearAllBtn: document.getElementById('clearAllBtn')
+    };
 
-  <section>
-  <h2>🛒 Item Economy</h2>
-  <p>Collect items like:</p>
-  <ul>
-    <li>🪙 Rusty Coin – 10 coins</li>
-    <li>🧸 Plushie – 2 coins</li>
-    <li>🧃 Juice Box – 3 coins</li>
-    <li>📜 Mysterious Scroll – 5 coins</li>
-    <li>🕶️ Cool Shades – 3 coins</li>
-    <li>🪞 Pocket Mirror – 2 coins</li>
-    <li>🧂 Salt Packet – 1 coin</li>
-    <li>🧪 Vibe Serum – 7 coins</li>
-  </ul>
-  <p>Mix them to create rare loot like:</p>
-  <ul>
-    <li>🧃 Salty Juice – 4 coins</li>
-    <li>😎 Cool Plushie – 10 coins</li>
-    <li>🔮 Mirror of Secrets – 8 coins</li>
-    <li>💥 Energy Elixir – 10 coins</li>
-    <li>🧸 Vibe Plushie – 6 coins</li>
-    <li>🪙 Cursed Coin – 8 coins</li>
-    <li>🧂 Reflective Salt – 3 coins</li>
-    <li>🧃 Chill Juice – 5 coins</li>
-    <li>🧪 Chaotic Ink – 5 coins</li>
-    <li>🪙 Pickled Coin – 7 coins</li>
-    <li>🧸 Lucky Plushie – 10 coins</li>
-  </ul>
-</section>
+    function saveNotesToStorage(){
+      localStorage.setItem(KEY, JSON.stringify(notes));
+      flash('Saved');
+      renderList();
+    }
 
-  <section>
-    <h2>📢 Admin Tools</h2>
-    <ul>
-      <li><span class="highlight">/setup_verify</span> – Create verification buttons</li>
-      <li><span class="highlight">/setup_ticket</span> – Add ticket buttons</li>
-      <li><span class="highlight">/setup_voicegen</span> – Create voice generator channels</li>
-      <li><span class="highlight">/setup_announce</span> – Toggle event announcement channels</li>
-    </ul>
-  </section>
+    function flash(msg){
+      els.status.textContent = msg;
+      clearTimeout(flash._t);
+      flash._t = setTimeout(()=> els.status.textContent = '', 1200);
+    }
 
-  <section>
-    <h2>🎉 Events & Social</h2>
-    <p>Trigger timed events that boost item drops and coin rewards. Use <span class="highlight">dap</span> to interact socially and earn badges. Special users can react to messages and bypass cooldowns.</p>
-  </section>
+    function uid(){return Date.now().toString(36) + Math.random().toString(36).slice(2,7)}
 
-  <footer>
-    Made with ❤️ by veghlaszi • Vulcan Bot © 2025
-  </footer>
+    function renderList(filter=''){
+      els.notesList.innerHTML = '';
+      const entries = Object.entries(notes).sort((a,b)=> b[1].updated - a[1].updated);
+      for(const [id,note] of entries){
+        if(filter && !(note.title+note.content).toLowerCase().includes(filter.toLowerCase())) continue;
+        const div = document.createElement('div');
+        div.className = 'note-item' + (id===currentId? ' active':'');
+        div.innerHTML = `<strong>${escapeHtml(note.title||'(no title)')}</strong><div class="small">${new Date(note.updated).toLocaleString()}</div>`;
+        div.onclick = ()=>{loadNote(id)};
+        els.notesList.appendChild(div);
+      }
+    }
+
+    function loadNote(id){
+      currentId = id;
+      const n = notes[id];
+      els.title.value = n.title;
+      els.content.value = n.content;
+      renderList(els.filter.value);
+    }
+
+    function newNote(){
+      currentId = null;
+      els.title.value = '';
+      els.content.value = '';
+      renderList(els.filter.value);
+      els.title.focus();
+    }
+
+    els.saveBtn.onclick = ()=>{
+      const t = els.title.value.trim();
+      const c = els.content.value;
+      const now = Date.now();
+      if(!currentId){
+        currentId = uid();
+      }
+      notes[currentId] = {title:t, content:c, updated:now};
+      saveNotesToStorage();
+    };
+
+    els.copyBtn.onclick = async ()=>{
+      const text = (els.title.value? els.title.value + '\n' : '') + els.content.value;
+      try{await navigator.clipboard.writeText(text); flash('Copied') }catch(e){flash('Copy failed')}
+    };
+
+    els.deleteBtn.onclick = ()=>{
+      if(!currentId) return newNote();
+      delete notes[currentId];
+      currentId = null;
+      saveNotesToStorage();
+      newNote();
+    };
+
+    els.newBtn.onclick = newNote;
+
+    els.filter.oninput = ()=> renderList(els.filter.value);
+
+    // export
+    els.exportBtn.onclick = ()=>{
+      const blob = new Blob([JSON.stringify(notes, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'quick-notes.json'; a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    els.importBtn.onclick = ()=> els.importFile.click();
+    els.importFile.onchange = ()=>{
+      const f = els.importFile.files[0];
+      if(!f) return;
+      const r = new FileReader();
+      r.onload = e=>{
+        try{ const obj = JSON.parse(e.target.result); notes = {...notes, ...obj}; saveNotesToStorage(); flash('Imported') }catch(e){flash('Invalid JSON')}
+      };
+      r.readAsText(f);
+    };
+
+    els.clearAllBtn.onclick = ()=>{
+      if(!confirm('Clear all notes?')) return; notes = {}; currentId = null; saveNotesToStorage(); newNote();
+    };
+
+    // helpers
+    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;','\\':'&#92;','"':'&quot;'}[c])) }
+
+    // keyboard shortcuts
+    document.addEventListener('keydown', e=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); els.saveBtn.click(); }
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='b'){ e.preventDefault(); els.copyBtn.click(); }
+    });
+
+    // init
+    renderList();
+    if(Object.keys(notes).length) loadNote(Object.keys(notes).sort((a,b)=> notes[b].updated - notes[a].updated)[0]);
+  </script>
 </body>
+</html>
